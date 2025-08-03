@@ -4,7 +4,81 @@
 
 <img width="700" alt="image" src="https://github.com/user-attachments/assets/4d666a04-f100-45c8-8d18-3e84fdc93cf8" />
 
-## RAG 구현
+## 주요 구현
+
+[agent.py](./application/agent.py)와 같이 app에서 agent를 실행하면 아래와 같이 run_agent가 실행됩니다. 이때 최초 실행이 되면 아래와 같이 initialize_agent()로 agent를 생성합니다. mcp_client가 준비가 되면 아래와 같이 agent를 [stream_async](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/streaming/async-iterators/)을 이용해 실행됩니다. Strands agent는 하나의 입력을 multi-step reasoning을 통해 답을 찾아가므로 중간의 출력들을 아래와 같이 show_streams으로 보여줍니다. 
+
+```python
+async def run_agent(query: str, containers):
+    global index, status_msg
+    global agent, mcp_client, tool_list
+    
+    if agent is None:
+        agent, mcp_client, tool_list = initialize_agent()
+
+    with mcp_client as client:
+        agent_stream = agent.stream_async(query)
+        result = await show_streams(agent_stream, containers)
+    return result
+```
+
+[mcp.json](./application/mcp.json)에서는 MCP 서버에 대한 정보를 가지고 있습니다. 이 정보를 이용하여 MCPClient를 생성할 수 있습니다. mcp.json의 MCP 서버의 정보인 command, args, env를 이용해 [StdioServerParameters](https://github.com/strands-agents/sdk-python?tab=readme-ov-file#mcp-support)를 구성합니다.
+
+```python
+def create_mcp_client(mcp_server_name: str):
+    config = load_mcp_config()
+    mcp_servers = config["mcpServers"]
+    
+    mcp_client = None
+    for server_name, server_config in mcp_servers.items():
+        env = server_config["env"] if "env" in server_config else None
+
+        if server_name == mcp_server_name:
+            mcp_client = MCPClient(lambda: stdio_client(
+                StdioServerParameters(
+                    command=server_config["command"], 
+                    args=server_config["args"], 
+                    env=env
+                )
+            ))
+            break
+    
+    return mcp_client
+```
+
+아래와 같이 "knowledge_base"를 사용하는 MCP agent를 아래와 같이 create_mcp_client로 생성합니다. 또한 [list_tools_sync](https://github.com/strands-agents/sdk-python?tab=readme-ov-file#mcp-support)를 이용해 tool에 대한 정보를 가져와서 tools에 추가합니다. 이후 아래와 같이 agent를 생성합니다.
+
+```python
+def initialize_agent():
+    """Initialize the global agent with MCP client"""
+    mcp_client = create_mcp_client("knowledge_base")
+        
+    # Create agent within MCP client context manager
+    with mcp_client as client:
+        mcp_tools = client.list_tools_sync()        
+        tools = []
+        tools.extend(mcp_tools)
+        tool_list = get_tool_list(tools)    
+        system_prompt = (
+            "당신의 이름은 현민이고, 질문에 대해 친절하게 답변하는 사려깊은 인공지능 도우미입니다."
+            "상황에 맞는 구체적인 세부 정보를 충분히 제공합니다." 
+            "모르는 질문을 받으면 솔직히 모른다고 말합니다."
+        )
+        model = get_model()
+        agent = Agent(
+            model=model,
+            system_prompt=system_prompt,
+            tools=tools,
+            conversation_manager=conversation_manager
+        )
+    
+    return agent, mcp_client, tool_list
+```
+
+
+## 설치 및 활용
+
+### RAG 구현
 
 [Knowledge Base](https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/knowledge-bases)에 접속해서 [Create]를 선택하여 RAG를 생성합니다. 완료가 되면 Knowledge Base의 ID를 확인합니다.
 
@@ -16,7 +90,7 @@ Amazon S3에 아래와 같이 파일을 업로드합니다.
 
 <img width="600" alt="noname" src="https://github.com/user-attachments/assets/efd6aa45-2bc4-43b4-8fcb-d53252c09cce" />
 
-## Strands Agent의 활용
+### Strands Agent의 활용
 
 Strands agent는 multi-step reasoning을 통해 향상된 RAG 검색을 가능하게 해줍니다. 이를 활용하기 위해 먼저 아래와 같이 git으로 부터 소스를 가져옵니다.
 
@@ -48,7 +122,7 @@ streamlit run application/app.py
 
 죄측의 메뉴에서 사용하는 모델을 선택할 수 있으며, "Debug Mode"로 최종 결과와 전체 결과를 구분하여 확인할 수 있습니다. 
 
-## 실행 결과
+### 실행 결과
 
 "Truck Gate의 Access Control에 대해 설명해주세요."라고 입력하면 아래와 같은 결과를 얻을 수 있습니다.
 
