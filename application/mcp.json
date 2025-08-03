@@ -4,6 +4,10 @@
             "command": "python",
             "args": ["application/mcp_server_retrieve.py"]
         },
+        "repl_coder": {
+            "command": "python",
+            "args": ["application/mcp_server_repl_coder.py"]
+        },
         "awslabs.aws-documentation-mcp-server": {
             "command": "uvx",
             "args": ["awslabs.aws-documentation-mcp-server@latest"],

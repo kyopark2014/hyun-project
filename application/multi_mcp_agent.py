@@ -47,7 +47,7 @@ def get_status_msg(status):
         return "[status]\n" + status + "..."
     else: 
         status = " -> ".join(status_msg)
-        return "[status]\n" + status    
+        return "[status]\n" + status
 
 model_id = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 aws_region = utils.bedrock_region
@@ -117,15 +117,17 @@ conversation_manager = SlidingWindowConversationManager(
     window_size=10,  
 )
 agent = None
-mcp_client = None
+knowledge_base_mcp_client = repl_coder_client = None
 
 def initialize_agent():
     """Initialize the global agent with MCP client"""
-    mcp_client = create_mcp_client("knowledge_base")
+    knowledge_base_mcp_client = create_mcp_client("knowledge_base")
+    repl_coder_client = create_mcp_client("repl_coder")
         
     # Create agent within MCP client context manager
-    with mcp_client as client:
-        mcp_tools = client.list_tools_sync()
+    with knowledge_base_mcp_client, repl_coder_client:
+        mcp_tools = knowledge_base_mcp_client.list_tools_sync()
+        mcp_tools.extend(repl_coder_client.list_tools_sync())
         logger.info(f"mcp_tools: {mcp_tools}")
         
         tools = []
@@ -148,7 +150,7 @@ def initialize_agent():
             conversation_manager=conversation_manager
         )
     
-    return agent, mcp_client, tool_list
+    return agent, knowledge_base_mcp_client, repl_coder_client, tool_list
 
 def create_filtered_mcp_tools(client):
     """Create MCP tools with parameter filtering"""
@@ -196,9 +198,11 @@ def get_tool_info(tool_name, tool_content):
             path = json_data["path"]
             if isinstance(path, list):
                 for url in path:
-                    urls.append(url)
+                    if url and url.strip():  # 빈 문자열이 아닌 경우만 추가
+                        urls.append(url)
             else:
-                urls.append(path)            
+                if path and path.strip():  # 빈 문자열이 아닌 경우만 추가
+                    urls.append(path)            
 
         for item in json_data:
             logger.info(f"item: {item}")
@@ -249,6 +253,7 @@ async def show_streams(agent_stream, containers):
     result = ""
     current_response = ""
     references = []
+    image_url = []  # 로컬 변수로 관리
 
     async for event in agent_stream:
         # logger.info(f"event: {event}")
@@ -305,6 +310,20 @@ async def show_streams(agent_stream, containers):
                                         references.append(r)
                                         logger.info(f"refs: {refs}")
 
+                                if urls:
+                                    valid_urls = [url for url in urls if url and url.strip()]
+                                    if valid_urls:
+                                        for url in valid_urls:
+                                            image_url.append(url)
+                                        logger.info(f"valid_urls: {valid_urls}")
+
+                                        if chat.debug_mode == "Enable" and containers is not None:
+                                            add_notification(containers, f"Added path to image_url: {valid_urls}")
+                                    else:
+                                        logger.info("유효한 URL이 없습니다.")
+                                else:
+                                    logger.info("URLs가 비어있습니다.")                                
+
         if "data" in event:
             text_data = event["data"]
             current_response += text_data
@@ -316,7 +335,7 @@ async def show_streams(agent_stream, containers):
     # get reference
     # result += get_reference(references)
     
-    return result
+    return result, image_url
 
 def get_tool_list(tools):
     tool_list = []
@@ -372,7 +391,7 @@ def create_mcp_client(mcp_server_name: str):
 tool_list = None
 async def run_agent(query: str, containers):
     global index, status_msg
-    global agent, mcp_client, tool_list
+    global agent, knowledge_base_mcp_client, repl_coder_client, tool_list
     index = 0
     status_msg = []
     
@@ -380,17 +399,17 @@ async def run_agent(query: str, containers):
 
     # Initialize agent if not exists
     if agent is None:
-        agent, mcp_client, tool_list = initialize_agent()
+        agent, knowledge_base_mcp_client, repl_coder_client, tool_list = initialize_agent()
 
     if chat.debug_mode and containers is not None and tool_list:
         containers['tools'].info(f"tool_list: {tool_list}")
     
-    with mcp_client as client:
+    with knowledge_base_mcp_client, repl_coder_client as client:
         agent_stream = agent.stream_async(query)
-        result = await show_streams(agent_stream, containers)
+        result, image_url = await show_streams(agent_stream, containers)
 
     logger.info(f"result: {result}")
 
     containers['status'].info(get_status_msg(f"end)"))
 
-    return result
+    return result, image_url
