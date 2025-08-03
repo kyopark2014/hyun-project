@@ -32,9 +32,9 @@ except Exception as e:
 @mcp.tool()
 def retrieve(keyword: str) -> str:
     """
-    Search the knowledge base with the given keyword.
-    keyword: the keyword to search
-    return: the result of search
+    Query the keyword using RAG based on the knowledge base.
+    keyword: the keyword to query
+    return: the result of query
     """
     logger.info(f"search --> keyword: {keyword}")
 
