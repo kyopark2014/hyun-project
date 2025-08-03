@@ -10,6 +10,10 @@ Amazon S3에 아래와 같이 파일을 업로드합니다.
 
 <img width="525" height="380" alt="noname" src="https://github.com/user-attachments/assets/42f530cf-11eb-456f-be5c-0ca58fe35fc7" />
 
+[Knowledge Base Console](https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/knowledge-bases)에 접속해서 생성한 Knowledge Bases를 선택한 후에 아래와 같이 sync를 선택합니다. Sync가 완료가 되면 [Test Knowledge Base]를 선택한 후에 
+
+<img width="1008" height="302" alt="noname" src="https://github.com/user-attachments/assets/efd6aa45-2bc4-43b4-8fcb-d53252c09cce" />
+
 
 
 ## Strands Agent의 활용
