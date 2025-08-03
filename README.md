@@ -55,6 +55,6 @@ streamlit run application/app.py
 
 "컨테이너 검사 과정을 시퀀스 다이어그램으로 보여줘"라고 입력하며 아래와 같은 diagram을 생성할 수 있습니다.
 
-<img width="500" alt="image" src="./77e8cb16.png" />
+<img width="500" alt="image" src="./contents/77e8cb16.png" />
 
 
