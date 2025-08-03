@@ -22,6 +22,31 @@ Strands agent는 multi-step reasoning을 통해 향상된 RAG 검색을 가능�
 git clone https://github.com/kyopark2014/hyun-project
 ```
 
+"application" 폴더의 [config.json](./application/config.json)을 선택한 후에 아래와 같이 knowledge_base_id를 업데이트 합니다. knowledge_base_id은 생성한 Knowledge Base의 ID입니다.
+
+```java
+{
+    "projectName":"hyun-project",
+    "region":"us-west-2",
+    "knowledge_base_id":"O2IGZXMQXO"
+ }
+```
+
+이제 필요한 패키지를 설치합니다.
+
+```text
+pip install -r requirements.txt
+```
+
+이후 아래와 같이 streamlit을 실행합니다.
+
+```text
+streamlit run application/app.py
+```
+
+이때 아래와 같이 실행이 됩니다. 사용모델 메뉴에서 모델을 선택할 수 있으며, "Debug Mode"로 최종 결과와 전체 결과를 구분하여 확인할 수 있습니다.
+
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/0e2604da-0156-42ec-b3c6-fd2bf55fd47e" />
 
 
 
