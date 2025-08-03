@@ -44,10 +44,9 @@ pip install -r requirements.txt
 streamlit run application/app.py
 ```
 
-이때 아래와 같이 실행이 됩니다. 사용모델 메뉴에서 모델을 선택할 수 있으며, "Debug Mode"로 최종 결과와 전체 결과를 구분하여 확인할 수 있습니다.
+죄측의 메뉴에서 사용하는 모델을 선택할 수 있으며, "Debug Mode"로 최종 결과와 전체 결과를 구분하여 확인할 수 있습니다. "Truck Gate의 Access Control에 대해 설명해주세요."라고 입력하면 아래와 같은 결과를 얻을 수 있습니다.
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/0e2604da-0156-42ec-b3c6-fd2bf55fd47e" />
-
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/ffc54f04-30a7-46e8-9b44-ce3d07961eb4" />
 
 
 
