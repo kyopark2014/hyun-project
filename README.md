@@ -1,6 +1,8 @@
 # Hyun Project
 
-여기서는 Streamlit 이용한 간단한 UI와 Knowledge Base를 이용한 RAG를 이용하여 strands agent 기반의 chatbot을 구현합니다. 
+여기서는 Streamlit 이용한 간단한 UI와 Knowledge Base를 이용한 RAG를 이용하여 strands agent 기반의 chatbot을 구현합니다. 전체적인 architecture는 아래와 같습니다. MCP server로 Knowledge Base, Code Interpreter를 이용하고 strands agent를 이용해 관련된 문서를 조회하여 답변을 구하고 필요하다면 다이어그램을 그래서 이해를 돕습니다.
+
+<img width="92" height="47" alt="image" src="https://github.com/user-attachments/assets/55ce28fb-4554-4b19-aeb2-a8704972d45e" />
 
 ## RAG 구현
 
