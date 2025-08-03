@@ -143,7 +143,6 @@ if prompt := st.chat_input("메시지를 입력하세요."):
             else:
                 response, image_url = asyncio.run(multi_mcp_agent.run_agent(query=prompt, containers=containers))
 
-            # 응답 메시지 저장
             logger.info(f"image_url type: {type(image_url)}, value: {image_url}")
             assistant_message = {
                 "role": "assistant", 
@@ -152,9 +151,7 @@ if prompt := st.chat_input("메시지를 입력하세요."):
             }
             st.session_state.messages.append(assistant_message)
             
-            # 이미지가 있으면 즉시 표시
             if image_url:
-                # 빈 URL 필터링
                 if isinstance(image_url, list):
                     valid_image_urls = [url for url in image_url if url and url.strip()]
                     if not valid_image_urls:

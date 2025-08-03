@@ -152,34 +152,6 @@ def initialize_agent():
     
     return agent, knowledge_base_mcp_client, repl_coder_client, tool_list
 
-def create_filtered_mcp_tools(client):
-    """Create MCP tools with parameter filtering"""
-    
-    original_tools = client.list_tools_sync()
-    filtered_tools = []
-    
-    for tool in original_tools:
-        if hasattr(tool, 'tool') and hasattr(tool.tool, 'name'):
-            # Create a wrapper that filters parameters
-            original_call = tool.call_async
-            
-            async def filtered_call(tool_use, invocation_state):
-                # Filter out problematic parameters
-                if hasattr(tool_use, 'input') and isinstance(tool_use.input, dict):
-                    filtered_input = filter_mcp_parameters(tool.tool.name, tool_use.input)
-                    # Create a new tool_use with filtered input
-                    tool_use.input = filtered_input
-                
-                return await original_call(tool_use, invocation_state)
-            
-            # Replace the call method
-            tool.call_async = filtered_call
-            filtered_tools.append(tool)
-        else:
-            filtered_tools.append(tool)
-    
-    return filtered_tools
-
 def get_tool_info(tool_name, tool_content):
     tool_references = []    
     urls = []
