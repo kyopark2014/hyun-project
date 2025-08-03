@@ -2,11 +2,9 @@ import re
 import base64
 import logging
 import traceback
-import chat 
 import sys
 import uuid
 
-from urllib import parse
 from langchain_experimental.tools import PythonAstREPLTool
 from io import BytesIO
 from PIL import Image

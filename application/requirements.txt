@@ -1,0 +1,23 @@
+# Streamlit for web UI
+streamlit
+
+# AWS SDK
+boto3
+botocore
+
+# Strands Agent framework
+strands
+strands-tools
+
+# MCP (Model Context Protocol) support
+mcp
+fastmcp
+
+# Image processing
+Pillow
+
+# Code execution tools
+langchain-experimental
+
+# Standard libraries (usually included with Python, but listed for completeness)
+# json, logging, sys, os, re, base64, traceback, uuid, urllib are built-in modules
