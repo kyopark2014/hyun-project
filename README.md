@@ -203,7 +203,7 @@ git clone https://github.com/kyopark2014/hyun-project
 이제 필요한 패키지를 설치합니다.
 
 ```text
-pip install streamlit streamlit-chat boto3 aioboto3 strands-agents strands-agents-tools mcp langchain_experimental
+pip install streamlit streamlit-chat boto3 asyncio strands-agents strands-agents-tools mcp langchain_experimental
 ```
 
 이후 아래와 같이 streamlit을 실행합니다.
