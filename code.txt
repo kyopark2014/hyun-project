@@ -1,0 +1,44 @@
+# 찾고자 하는 VIN
+target_vin = "2kkpR4DA4SY001853"
+
+# 데이터를 라인별로 분리하고 해당 VIN 찾기
+lines = data.strip().split('\n')
+target_records = []
+
+for line in lines:
+    if line.startswith(target_vin):
+        target_records.append(line)
+
+print(f"VIN {target_vin}에 대한 Hold 정보:")
+print("=" * 80)
+
+if target_records:
+    for i, record in enumerate(target_records, 1):
+        fields = record.split(',')
+        vin = fields[0]
+        hold_cd = fields[1]
+        hold_type = fields[2]
+        hold_com = fields[3]
+        user_id = fields[4]
+        cmnt = fields[5]
+        hold_dt = fields[6]
+        hold_tm = fields[7]
+        hold_off_dt = fields[8]
+        hold_off_tm = fields[9]
+        updt_dttm = fields[10]
+        
+        print(f"\n{i}. Hold Code: {hold_cd}")
+        print(f"   Hold Type: {hold_type}")
+        print(f"   Hold Company: {hold_com}")
+        print(f"   User ID: {user_id}")
+        print(f"   Comment: {cmnt}")
+        print(f"   Hold Date: {hold_dt}")
+        print(f"   Hold Time: {hold_tm}")
+        print(f"   Hold Off Date: {hold_off_dt}")
+        print(f"   Hold Off Time: {hold_off_tm}")
+        print(f"   Update DateTime: {updt_dttm}")
+        
+    print(f"\n총 {len(target_records)}개의 Hold 기록이 있습니다.")
+else:
+    print("해당 VIN에 대한 Hold 정보를 찾을 수 없습니다.")
+server.py:619 | Processing request of type ListToolsRequest
