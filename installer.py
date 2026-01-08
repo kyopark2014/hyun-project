@@ -3546,7 +3546,7 @@ def main():
         ec2_role_arn = create_ec2_role(knowledge_base_role_arn)
         
         # 3. Create secrets
-        secret_arns = create_secrets()
+        # secret_arns = create_secrets()
         
         # 4. Create OpenSearch collection (with EC2 and Knowledge Base roles for data access)
         opensearch_info = create_opensearch_collection(ec2_role_arn, knowledge_base_role_arn)
