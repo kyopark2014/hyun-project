@@ -20,7 +20,7 @@ import urllib.error
 # Configuration
 project_name = "hyun" # at least 3 characters
 region = "us-west-2"
-git_name = "hyun"
+git_name = "hyun-project"
 
 sts_client = boto3.client("sts", region_name=region)
 account_id = sts_client.get_caller_identity()["Account"]

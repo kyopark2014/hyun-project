@@ -1,12 +1,12 @@
 {
   "projectName": "hyun",
   "region": "us-west-2",
-  "knowledge_base_id": "FJIPLTB5PA",
+  "knowledge_base_id": "ST95BWPGMN",
   "accountId": "262976740991",
   "knowledge_base_role": "arn:aws:iam::262976740991:role/role-knowledge-base-for-hyun-us-west-2",
-  "collectionArn": "arn:aws:aoss:us-west-2:262976740991:collection/mxhtejff0iitgy5g3wa1",
-  "opensearch_url": "https://mxhtejff0iitgy5g3wa1.us-west-2.aoss.amazonaws.com",
+  "collectionArn": "arn:aws:aoss:us-west-2:262976740991:collection/kb6ctpie5pgx5v7ac5k6",
+  "opensearch_url": "https://kb6ctpie5pgx5v7ac5k6.us-west-2.aoss.amazonaws.com",
   "s3_bucket": "storage-for-hyun-262976740991-us-west-2",
   "s3_arn": "arn:aws:s3:::storage-for-hyun-262976740991-us-west-2",
-  "sharing_url": "https://dvykfcf8alq61.cloudfront.net"
+  "sharing_url": "https://d3pqhhgyuyi86h.cloudfront.net"
 }
